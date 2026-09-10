@@ -1,10 +1,15 @@
 package main
 
+import _ "github.com/lib/pq"
 import (
 	"os"
 	"fmt"
 
+	"database/sql"
+	// "github.com/google/uuid"
+
 	"gator/internal/config"
+	"gator/internal/database"
 )
 
 func main() {
@@ -12,13 +17,38 @@ func main() {
 	if err != nil {
 		os.Exit(1)
 	}
+	
+	db, err := sql.Open("postgres", cfg.DbUrl)
+		if err != nil {
+		os.Exit(1)
+	}
+	
+	dbQueries := database.New(db)
+	var projState = state{ 
+		db: dbQueries,
+		cfg: &cfg, 
+	}
 
-	cfg.SetUser("matthew")
-
-	cfg, err = config.Read()
-	if err != nil {
+	var cmdMap = commands{ 
+		Options: map[string]func(*state, command) error{}, 
+	}
+	cmdMap.register("login", handlerLogin)
+	cmdMap.register("register", handlerRegister)
+	
+	args := os.Args
+	if (len(args) < 2) {
+		fmt.Println("Command name not given")
 		os.Exit(1)
 	}
 
-	fmt.Printf("%+v\n", cfg)
+	var cmd = command{
+		Name: args[1],
+		Args: args[2:],
+	}
+
+	err = cmdMap.run(&projState, cmd)
+	if err != nil {
+		fmt.Printf("Error running command [%s] - %s\n", cmd.Name, err)
+		os.Exit(1)
+	}
 }
