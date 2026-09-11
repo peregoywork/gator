@@ -34,6 +34,7 @@ func main() {
 	}
 	cmdMap.register("login", handlerLogin)
 	cmdMap.register("register", handlerRegister)
+	cmdMap.register("reset", handlerReset)
 	
 	args := os.Args
 	if (len(args) < 2) {

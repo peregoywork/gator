@@ -49,3 +49,13 @@ func handlerRegister(s *state, cmd command) error {
 
 	return nil
 }
+
+// Delete all users from the database
+func handlerReset(s *state, cmd command) error {
+	err := s.db.DeleteAllUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("Did not delete all users: %s", err)
+	}
+	fmt.Printf("Dropped all users from table\n")
+	return nil
+}
