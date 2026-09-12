@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"database/sql"
-	// "github.com/google/uuid"
 
 	"gator/internal/config"
 	"gator/internal/database"
@@ -35,7 +34,9 @@ func main() {
 	cmdMap.register("login", handlerLogin)
 	cmdMap.register("register", handlerRegister)
 	cmdMap.register("reset", handlerReset)
-	
+	cmdMap.register("users", handlerGetUsers)
+	cmdMap.register("agg", handlerAgg)
+
 	args := os.Args
 	if (len(args) < 2) {
 		fmt.Println("Command name not given")
