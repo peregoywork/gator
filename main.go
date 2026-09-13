@@ -36,6 +36,8 @@ func main() {
 	cmdMap.register("reset", handlerReset)
 	cmdMap.register("users", handlerGetUsers)
 	cmdMap.register("agg", handlerAgg)
+	cmdMap.register("addfeed", handlerAddFeed)
+	cmdMap.register("feeds", handlerGetFeeds)
 
 	args := os.Args
 	if (len(args) < 2) {
