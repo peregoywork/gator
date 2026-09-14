@@ -38,6 +38,8 @@ func main() {
 	cmdMap.register("agg", handlerAgg)
 	cmdMap.register("addfeed", handlerAddFeed)
 	cmdMap.register("feeds", handlerGetFeeds)
+	cmdMap.register("follow", handlerFollow)
+	cmdMap.register("following", handlerListFollowing)
 
 	args := os.Args
 	if (len(args) < 2) {
