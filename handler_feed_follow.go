@@ -10,18 +10,13 @@ import (
 	"gator/internal/database"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.Args) < 1 {
 		return fmt.Errorf("follow command requires one args: url")
 	}
 
 	url := cmd.Args[0]
 	ctx := context.Background()
-
-	user, err := s.db.GetOneUser(ctx, s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("Error fetching user: %w", err)
-	}
 
 	feed, err := s.db.GetFeedByURL(ctx, url)
 	if err != nil {
@@ -44,9 +39,9 @@ func handlerFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerListFollowing(s *state, cmd command) error {
+func handlerListFollowing(s *state, cmd command, user database.User) error {
 	ctx := context.Background()
-	follows, err := s.db.GetFeedFollowsForUser(ctx, s.cfg.CurrentUserName)
+	follows, err := s.db.GetFeedFollowsForUser(ctx, user.ID)
 	if err != nil {
 		return fmt.Errorf("could not list all feeds: %w", err)
 	}

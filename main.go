@@ -34,12 +34,12 @@ func main() {
 	cmdMap.register("login", handlerLogin)
 	cmdMap.register("register", handlerRegister)
 	cmdMap.register("reset", handlerReset)
-	cmdMap.register("users", handlerGetUsers)
+	cmdMap.register("users", handlerGetOneUsers)
 	cmdMap.register("agg", handlerAgg)
-	cmdMap.register("addfeed", handlerAddFeed)
+	cmdMap.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	cmdMap.register("feeds", handlerGetFeeds)
-	cmdMap.register("follow", handlerFollow)
-	cmdMap.register("following", handlerListFollowing)
+	cmdMap.register("follow", middlewareLoggedIn(handlerFollow))
+	cmdMap.register("following", middlewareLoggedIn(handlerListFollowing))
 
 	args := os.Args
 	if (len(args) < 2) {
@@ -58,3 +58,6 @@ func main() {
 		os.Exit(1)
 	}
 }
+
+
+

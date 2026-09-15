@@ -61,7 +61,7 @@ func handlerReset(s *state, cmd command) error {
 }
 
 // Get all user names
-func handlerGetUsers(s *state, cmd command) error {
+func handlerGetOneUsers(s *state, cmd command) error {
 	users, err := s.db.GetManyUsers(context.Background())
 	if err != nil {
 		return fmt.Errorf("Could not fetch users: %s", err)

@@ -10,7 +10,7 @@ import (
 	"gator/internal/database"
 )
 
-func handlerAddFeed(s *state, cmd command) error {
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.Args) < 2 {
 		return fmt.Errorf("Feed requires two args: name, url")
 	}
@@ -18,11 +18,6 @@ func handlerAddFeed(s *state, cmd command) error {
 	feed_name := cmd.Args[0]
 	feed_url := cmd.Args[1]
 	ctx := context.Background()
-
-	user, err := s.db.GetOneUser(ctx, s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("user not found for name %s. Cannot create feed", s.cfg.CurrentUserName)
-	}
 
 	feed, err := s.db.CreateFeed(ctx, database.CreateFeedParams{
 		ID: uuid.New(),
