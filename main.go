@@ -39,6 +39,7 @@ func main() {
 	cmdMap.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	cmdMap.register("feeds", handlerGetFeeds)
 	cmdMap.register("follow", middlewareLoggedIn(handlerFollow))
+	cmdMap.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 	cmdMap.register("following", middlewareLoggedIn(handlerListFollowing))
 
 	args := os.Args
