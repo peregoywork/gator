@@ -2,23 +2,30 @@ package main
 
 import (
 	"fmt"
-	"context"
+	"time"
 )
 
 func handlerAgg(s *state, cmd command) error {
-	ctx := context.Background()
-	url := "https://www.wagslane.dev/index.xml"
-	rss, err := fetchFeed(ctx, url)
-	if err != nil {
-		return fmt.Errorf("Could not fetch feed: %s\n", err)
+	if len(cmd.Args) != 1 {
+		return fmt.Errorf("agg function must be given some duration (eg: 1s, 1m, 1h)")
 	}
 
-	fmt.Println("Feed:")
-	fmt.Printf("%s - %s - %s\n", rss.Channel.Title, rss.Channel.Description, rss.Channel.Link)
-	for _, item := range rss.Channel.Item {
-		fmt.Printf("%+v\n", item)
+	dur, err := time.ParseDuration(cmd.Args[0])
+	if err != nil {
+		return fmt.Errorf("could not parse given arg as time.Duration: %s", cmd.Args[0])
+	}
+	
+	ticker := time.NewTicker(dur)
+	fmt.Println("Collecting feeds every %s", dur)
+
+	for ; ; <-ticker.C {
+		err = scrapeFeeds(s)
+		if err != nil {
+			return fmt.Errorf("error scraping feeds: %s", err)
+		}
 	}
 
 	return nil
 }
+
 
