@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"gator/internal/database"
 )
 
 func handlerAgg(s *state, cmd command) error {
@@ -33,10 +35,17 @@ func scrapeFeeds(s *state) error {
 	ctx := context.Background()
 	feed, err := s.db.GetNextFeedToFetch(ctx)
 	if err != nil {
-		return err
+		return log.Errorf("could not get next feeds to fetch: %s", err) 
 	}
 
-	err = s.db.MarkFeedFetched(ctx, feed.ID)
+	scrapeFeed(s.db, feed)
+
+	return nil
+}
+
+
+func scrapeFeed(db *database.Queries, feed database.Feed) {
+	err = db.MarkFeedFetched(ctx, feed.ID)
 	if err != nil {
 		return err
 	}
@@ -51,7 +60,6 @@ func scrapeFeeds(s *state) error {
 	for _, item := range rssFeed.Channel.Item {
 		fmt.Printf("%+v\n", item.Title)
 	}
-
-	return nil
 }
+
 
