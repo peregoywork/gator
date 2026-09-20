@@ -29,3 +29,29 @@ func handlerAgg(s *state, cmd command) error {
 }
 
 
+func scrapeFeeds(s *state) error {
+	ctx := context.Background()
+	feed, err := s.db.GetNextFeedToFetch(ctx)
+	if err != nil {
+		return err
+	}
+
+	err = s.db.MarkFeedFetched(ctx, feed.ID)
+	if err != nil {
+		return err
+	}
+
+	rssFeed, err := fetchFeed(ctx, feed.Url)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Feed:")
+	fmt.Printf("%s - %s - %s\n", rssFeed.Channel.Title, rssFeed.Channel.Description, rssFeed.Channel.Link)
+	for _, item := range rssFeed.Channel.Item {
+		fmt.Printf("%+v\n", item.Title)
+	}
+
+	return nil
+}
+
