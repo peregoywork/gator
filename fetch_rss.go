@@ -3,7 +3,6 @@ package main
 import (
 	"io"
 	"html"
-	"fmt"
 	"context"
 	"net/http"
 	"encoding/xml"
