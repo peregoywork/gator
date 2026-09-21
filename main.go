@@ -41,6 +41,7 @@ func main() {
 	cmdMap.register("follow", middlewareLoggedIn(handlerFollow))
 	cmdMap.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 	cmdMap.register("following", middlewareLoggedIn(handlerListFollowing))
+	cmdMap.register("browse", middlewareLoggedIn(handlerBrowse))
 
 	args := os.Args
 	if (len(args) < 2) {
